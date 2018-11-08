@@ -46,7 +46,7 @@ size_t lab_vec_type_size(lab_vec_t* vec) {
 }
 
 void* lab_vec_at(lab_vec_t* vec, size_t index) {
-    if(index > vec->used_size) {
+    if(index >= vec->used_size) {
         lab_errorln("Tried to access data outside of vector of size %d but access index of %d", vec->used_size, index);
         return NULL;
     } else {
@@ -55,7 +55,7 @@ void* lab_vec_at(lab_vec_t* vec, size_t index) {
 }
 
 void* lab_vec_at_raw_alloc(lab_vec_t* vec, size_t index) {
-    if(index > vec->alloc_size) {
+    if(index >= vec->alloc_size) {
         lab_errorln("Tried to access data outside of vector of alloc size %d but access index of %d", vec->alloc_size, index);
         return NULL;
     } else {
@@ -79,7 +79,7 @@ bool lab_vec_resize(lab_vec_t* vec, size_t new_size) {
 
 void* lab_vec_push_back_arr(lab_vec_t* vec, void* raw_data, size_t count) {
     vec->used_size += count;
-    if(vec->used_size >= vec->alloc_size) {
+    if(vec->used_size > vec->alloc_size) {
         if(!lab_vec_resize(vec, vec->alloc_size + (vec->used_size - vec->alloc_size))) {
             lab_errorln("Failed to push back vector!");
             return NULL;
