@@ -128,7 +128,7 @@ bool lab_vec_remove_arr(lab_vec_t* vec, size_t start_index, size_t count) {
 
     vec->used_size -= count;
 
-    memmove(lab_vec_at(vec, start_index), lab_vec_at(vec, start_index + count), vec->used_size - (start_index + count));
+    memmove(lab_vec_at(vec, start_index), lab_vec_at(vec, start_index + count), vec->used_size - start_index);
 
     return true;
 }
