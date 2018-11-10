@@ -22,16 +22,24 @@
 
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdbool.h>
 
 extern void* lab_print_stream();
 //    ^ returns current print stream for print, notice, and success
+//      returns FILE*
 extern void* lab_error_stream();
 //    ^ returns current print stream for warn and error
+//      returns FILE*
 extern bool  lab_retarget_print(void* target);
 //    ^ retargets print output
+//      target` MUST be a FILE*
 extern bool  lab_retarget_error(void* target);
 //    ^ retargets error output
+//     `target` MUST be a FILE*
 
 extern void lab_print    (const char* fmt, ...);
 extern void lab_println  (const char* fmt, ...);
@@ -43,3 +51,7 @@ extern void lab_error    (const char* fmt, ...);
 extern void lab_errorln  (const char* fmt, ...);
 extern void lab_success  (const char* fmt, ...);
 extern void lab_successln(const char* fmt, ...);
+
+#ifdef __cplusplus
+}
+#endif

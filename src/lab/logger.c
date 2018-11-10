@@ -1,3 +1,7 @@
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdlib.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -132,3 +136,7 @@ void lab_successln(const char* fmt, ...) {
     
     );
 }
+
+#ifdef __cplusplus
+}
+#endif

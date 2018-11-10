@@ -1,3 +1,7 @@
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "vector.h"
 
 #include <stdlib.h>
@@ -115,3 +119,7 @@ bool lab_vec_insert(lab_vec_t* vec, size_t index, void* raw_data, size_t count) 
     memcpy(vec->raw_data + index, raw_data, vec->type_size * count);
     return true;
 }
+
+#ifdef __cplusplus
+}
+#endif

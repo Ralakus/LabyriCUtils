@@ -1,3 +1,9 @@
+#pragma once
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "logger.h"
 
 #include <stdbool.h>
@@ -74,3 +80,9 @@ extern bool lab_vec_pop_back    (lab_vec_t* vec);
     Returns false if insert failed
 */
 extern bool lab_vec_insert(lab_vec_t* vec, size_t index, void* raw_data, size_t count);
+
+
+
+#ifdef __cplusplus
+}
+#endif
