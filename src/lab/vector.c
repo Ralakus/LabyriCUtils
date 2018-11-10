@@ -123,6 +123,21 @@ void* lab_vec_insert(lab_vec_t* vec, size_t index, void* raw_data, size_t count)
     return lab_vec_at(vec, index);
 }
 
+
+bool lab_vec_remove_arr(lab_vec_t* vec, size_t start_index, size_t count) {
+
+    vec->used_size -= count;
+
+    memmove(lab_vec_at(vec, start_index), lab_vec_at(vec, start_index + count), vec->used_size - (start_index + count));
+
+    return true;
+}
+
+bool lab_vec_remove    (lab_vec_t* vec, size_t index) {
+    return lab_vec_remove_arr(vec, index, 1);
+}
+
+
 #ifdef __cplusplus
 }
 #endif

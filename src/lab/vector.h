@@ -84,6 +84,14 @@ extern bool lab_vec_pop_back    (lab_vec_t* vec);
 extern void* lab_vec_insert(lab_vec_t* vec, size_t index, void* raw_data, size_t count);
 
 
+/*
+    Removes data from the vector
+    Does not shrink vector
+*/
+extern bool lab_vec_remove_arr(lab_vec_t* vec, size_t start_index, size_t count);
+extern bool lab_vec_remove    (lab_vec_t* vec, size_t index);
+
+
 
 #ifdef __cplusplus
 }
