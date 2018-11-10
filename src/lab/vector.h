@@ -64,6 +64,7 @@ extern bool lab_vec_resize(lab_vec_t* vec, size_t new_size);
 /*
     Appends data to end of vector
     Returns pointer to data appended
+    If NULL is passed as raw_data, no data will be copied into vector
 */
 extern void* lab_vec_push_back_arr(lab_vec_t* vec, void* raw_data, size_t count);
 extern void* lab_vec_push_back    (lab_vec_t* vec, void* raw_data);
@@ -77,9 +78,10 @@ extern bool lab_vec_pop_back    (lab_vec_t* vec);
 
 /*
     Inserts data at specified index
-    Returns false if insert failed
+    Returns pointer to new data
+    If NULL is passed as raw_data, no data will be copied into vector
 */
-extern bool lab_vec_insert(lab_vec_t* vec, size_t index, void* raw_data, size_t count);
+extern void* lab_vec_insert(lab_vec_t* vec, size_t index, void* raw_data, size_t count);
 
 
 
