@@ -18,7 +18,7 @@ typedef struct lab_mempool_t {
 /*
     Mempool must be initilized before use and must be freed after use
 */
-extern bool lab_mempool_init(lab_mempool_t* pool, size_t bytes);
+extern bool lab_mempool_init(lab_mempool_t* pool, size_t bytes, size_t sub_alloc_count);
 extern void lab_mempool_free(lab_mempool_t* pool);
 
 /*

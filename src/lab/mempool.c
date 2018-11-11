@@ -1,7 +1,7 @@
 #include "mempool.h"
 
-bool lab_mempool_init(lab_mempool_t* pool, size_t bytes) {
-    return lab_vec_init(&pool->data, 1, bytes) && lab_vec_init(&pool->sub_allocs, sizeof(lab_mempool_suballoc_t), 0);
+bool lab_mempool_init(lab_mempool_t* pool, size_t bytes, size_t sub_alloc_count) {
+    return lab_vec_init(&pool->data, 1, bytes) && lab_vec_init(&pool->sub_allocs, sizeof(lab_mempool_suballoc_t), sub_alloc_count);
 }
 
 void lab_mempool_free(lab_mempool_t* pool) {
