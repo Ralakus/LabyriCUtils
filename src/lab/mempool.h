@@ -1,3 +1,5 @@
+#pragma once
+
 #include "vector.h"
 
 typedef struct lab_mempool_suballoc_t {
