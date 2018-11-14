@@ -112,11 +112,11 @@ bool lab_vec_pop_back    (lab_vec_t* vec) {
 void* lab_vec_insert(lab_vec_t* vec, size_t index, void* raw_data, size_t count) {
     vec->used_size += count;
     if(vec->used_size > vec->alloc_size) {
-        if(!lab_vec_resize(vec, vec->used_size + count)) {
+        if(!lab_vec_resize(vec, vec->used_size)) {
             return NULL;
         }
     }
-    memmove(lab_vec_at(vec, index + count), lab_vec_at(vec, index), vec->used_size - index);
+    memmove(lab_vec_at_raw_alloc(vec, index + count), lab_vec_at_raw_alloc(vec, index), vec->used_size - index);
     if(raw_data!=NULL) {
         memcpy(vec->raw_data + index, raw_data, vec->type_size * count);
     }

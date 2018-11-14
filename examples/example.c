@@ -1,7 +1,16 @@
 #include <lab/logger.h>
 #include <lab/vector.h>
+#include <lab/mempool.h>
 
 int main() {
+
+    lab_mempool_t pool;
+    lab_mempool_init(&pool, 1, 0);
+
+    lab_mempool_suballoc_t* alloc1 = lab_mempool_suballoc_alloc(&pool, 16);
+    lab_mempool_suballoc_t* alloc2 = lab_mempool_suballoc_alloc(&pool, 16);
+
+    lab_mempool_free(&pool);
 
     lab_vec_t hello_str;
     lab_vec_init(&hello_str, sizeof(char), 0);

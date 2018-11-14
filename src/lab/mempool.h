@@ -27,4 +27,5 @@ extern void lab_mempool_free(lab_mempool_t* pool);
     Each suballocation does not need to be freed but only to reduce memory consumption
 */
 extern lab_mempool_suballoc_t* lab_mempool_suballoc_alloc(lab_mempool_t* pool, size_t bytes);
+//extern lab_mempool_suballoc_t* lab_mempool_suballoc_realloc(lab_mempool_t* pool, lab_mempool_suballoc_t* alloc, size_t bytes);
 extern bool                    lab_mempool_suballoc_free(lab_mempool_t* pool, lab_mempool_suballoc_t* alloc);
