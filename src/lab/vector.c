@@ -31,7 +31,6 @@ bool lab_vec_init(lab_vec_t* vec, size_t type_size, size_t init_size) {
 }
 
 void lab_vec_free(lab_vec_t* vec) {
-    vec->type_size  = 0;
     vec->used_size  = 0;
     vec->alloc_size = 0;
     free(vec->raw_data);
@@ -68,6 +67,10 @@ void* lab_vec_at_raw_alloc(lab_vec_t* vec, size_t index) {
 }
 
 bool lab_vec_resize(lab_vec_t* vec, size_t new_size) {
+    if(new_size == 0) {
+        lab_vec_free(vec);
+        return true;
+    }
     vec->alloc_size = new_size;
     vec->raw_data = realloc(vec->raw_data, vec->alloc_size * vec->type_size);
     if(vec->raw_data == NULL) {

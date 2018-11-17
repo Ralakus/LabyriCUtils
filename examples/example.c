@@ -5,7 +5,7 @@
 int main() {
 
     lab_mempool_t pool;
-    lab_mempool_init(&pool, 1, 0);
+    lab_mempool_init(&pool, 1, 0); // 1 instead of 0 for size due to a bug in Clang
 
     lab_mempool_suballoc_t* alloc1 = lab_mempool_suballoc_alloc(&pool, 16);
     lab_mempool_suballoc_t* alloc2 = lab_mempool_suballoc_alloc(&pool, 16);
