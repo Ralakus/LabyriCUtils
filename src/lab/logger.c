@@ -137,6 +137,23 @@ void lab_successln(const char* fmt, ...) {
     );
 }
 
+void lab_print_raw    (const char* fmt, ...) {
+    _LAB_PRINT_TEMPLATE(lab_print_stream(),
+
+    vfprintf(print_stream, fmt, args);
+
+    );
+}
+
+void lab_println_raw  (const char* fmt, ...) {
+    _LAB_PRINT_TEMPLATE(lab_print_stream(),
+
+    vfprintf(print_stream, fmt, args);
+    fprintf (print_stream, "\n");
+
+    );
+}
+
 #ifdef __cplusplus
 }
 #endif
