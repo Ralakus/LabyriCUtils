@@ -37,6 +37,7 @@ build-example:
 
 run-example:
     stage: run-example
+    image: ubuntu
     script:
         - cd examples/build
         - ./LabExample
