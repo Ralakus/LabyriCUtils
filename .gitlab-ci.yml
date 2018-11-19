@@ -1,0 +1,41 @@
+stages:
+    - build-lib
+    - build-example
+    - run-example
+
+variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+
+build-lib:
+    stage: build-lib
+    image: ubuntu
+    before_script:
+        - apt update
+        - apt install gcc cmake ninja-build -y
+    script:
+        - CC=gcc cmake . -Bbuild -GNinja
+        - cd build
+        - cmake --build . --config Debug
+    artifacts:
+        paths:
+            - build/LabCUtils
+
+build-example:
+    stage: build-example
+    before_script:
+        - apt update
+        - apt install gcc cmake ninja-build -y
+    script:
+        - cd examples
+        - CC=gcc cmake . -Bbuild -GNinja
+        - cd build
+        - cmake --build . --config Debug
+    artifacts:
+        paths:
+            - examples/build/LabExample
+
+run-example:
+    stage: run-example
+    script:
+        - cd examples/build
+        - ./LabExample
