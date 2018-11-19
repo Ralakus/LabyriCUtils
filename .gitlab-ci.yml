@@ -18,14 +18,14 @@ build-lib:
         - cmake --build . --config Debug
     artifacts:
         paths:
-            - build/LabCUtils
+            - build/libLabCUtils.a
 
 build-example:
     stage: build-example
     image: ubuntu
     before_script:
         - apt update
-        - apt install g++ gcc cmake ninja-build -y
+        - apt install gcc cmake ninja-build -y
     script:
         - cd examples
         - CC=gcc cmake . -Bbuild -GNinja
