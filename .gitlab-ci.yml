@@ -25,6 +25,8 @@ build-example:
     before_script:
         - apt update
         - apt install g++ gcc cmake ninja-build -y
+        - hash -r
+        - cmake --version
     script:
         - cd examples
         - CC=gcc cmake . -Bbuild -GNinja
