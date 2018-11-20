@@ -38,6 +38,9 @@ build-example:
         - examples/build/LabExample
         - examples/build/CMakeFiles/LabExample.dir/*.o
         - examples/build/CMakeFiles/LabExample.dir/*.gcno
+        - build/libLabCUtils.a
+        - build/CMakeFiles/LabCUtils.dir/src/lab/*.o
+        - build/CMakeFiles/LabCUtils.dir/src/lab/*.gcno
 
 run-example:
     stage: run-example
