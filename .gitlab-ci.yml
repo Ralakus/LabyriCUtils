@@ -19,8 +19,8 @@ build-lib:
     artifacts:
         paths:
         - build/libLabCUtils.a
-        - build/CMakeFiles/LabCUtils.dir/src/*.o
-        - build/CMakeFiles/LabCUtils.dir/src/*.gcno
+        - build/CMakeFiles/LabCUtils.dir/src/lab/*.o
+        - build/CMakeFiles/LabCUtils.dir/src/lab/*.gcno
 
 build-example:
     stage: build-example
