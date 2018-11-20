@@ -13,7 +13,7 @@ build-lib:
     - apt update
     - apt install gcc cmake ninja-build -y
     script:
-    - CC=gcc cmake -Bbuild -GNinja -DCMAKE_BUILD_TYPE=Debug .
+    - CC=gcc cmake . -Bbuild -GNinja -DCMAKE_BUILD_TYPE=Debug
     - cd build
     - cmake --build . --config Debug
     artifacts:
@@ -30,7 +30,7 @@ build-example:
     - apt install gcc cmake ninja-build -y
     script:
     - cd examples
-    - CC=gcc cmake -Bbuild -GNinja -DCMAKE_BUILD_TYPE=Debug .
+    - CC=gcc cmake . -Bbuild -GNinja -DCMAKE_BUILD_TYPE=Debug
     - cd build
     - cmake --build . --config Debug
     artifacts:
