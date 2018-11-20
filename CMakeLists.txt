@@ -21,6 +21,13 @@ file(GLOB_RECURSE all_c_src
 add_library(LabCUtils STATIC ${all_c_src})
 set_property(TARGET LabCUtils PROPERTY C_STANDARD 11)
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    target_compile_options(LabCUtils PRIVATE -fprofile-arcs -ftest-coverage -fPIC -O0)
+    target_link_libraries(LabCUtils PRIVATE -fprofile-arcs -ftest-coverage -fPIC -O0)
+else()
+    target_compile_options(LabCUtils PRIVATE -O3 -flto)
+endif()
+
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)     # 64 bit
 
     target_compile_definitions(LabCUtils PUBLIC LAB_64_BIT)
