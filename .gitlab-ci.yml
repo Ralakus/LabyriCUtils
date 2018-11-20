@@ -1,7 +1,7 @@
 stages:
-    - build-lib
-    - build-example
-    - run-example
+- build-lib
+- build-example
+- run-example
 
 variables:
     GIT_SUBMODULE_STRATEGY: recursive
@@ -10,34 +10,44 @@ build-lib:
     stage: build-lib
     image: ubuntu
     before_script:
-        - apt update
-        - apt install gcc cmake ninja-build -y
+    - apt update
+    - apt install gcc cmake ninja-build -y
     script:
-        - CC=gcc cmake . -Bbuild -GNinja
-        - cd build
-        - cmake --build . --config Debug
+    - CC=gcc cmake -Bbuild -GNinja -DCMAKE_BUILD_TYPE=Debug .
+    - cd build
+    - cmake --build . --config Debug
     artifacts:
         paths:
-            - build/libLabCUtils.a
+        - build/libLabCUtils.a
+        - build/CMakeFiles/LabCUtils.dir/src/*.o
+        - build/CMakeFiles/LabCUtils.dir/src/*.gcno
 
 build-example:
     stage: build-example
     image: ubuntu
     before_script:
-        - apt update
-        - apt install gcc cmake ninja-build -y
+    - apt update
+    - apt install gcc cmake ninja-build -y
     script:
-        - cd examples
-        - CC=gcc cmake . -Bbuild -GNinja
-        - cd build
-        - cmake --build . --config Debug
+    - cd examples
+    - CC=gcc cmake -Bbuild -GNinja -DCMAKE_BUILD_TYPE=Debug .
+    - cd build
+    - cmake --build . --config Debug
     artifacts:
         paths:
-            - examples/build/LabExample
+        - examples/build/LabExample
+        - examples/build/CMakeFiles/LabExample.dir/*.o
+        - examples/build/CMakeFiles/LabExample.dir/*.gcno
 
 run-example:
     stage: run-example
     image: ubuntu
+    before_script:
+    - apt update
+    - apt install python3-pip -y
+    - pip3 --version
+    - pip3 install gcovr
     script:
-        - cd examples/build
-        - ./LabExample
+    - cd examples/build
+    - ./LabExample
+    - gcovr

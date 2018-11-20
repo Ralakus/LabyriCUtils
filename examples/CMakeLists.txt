@@ -18,3 +18,10 @@ add_executable(LabExample example.c)
 set_property(TARGET LabExample PROPERTY C_STANDARD 11)
 
 target_link_libraries(LabExample PUBLIC ${PROJECT_SOURCE_DIR}/../build/libLabCUtils.a)
+
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    target_compile_options(LabExample PRIVATE -fprofile-arcs -ftest-coverage -fPIC -O0)
+    target_link_libraries(LabExample PRIVATE -fprofile-arcs -ftest-coverage -fPIC -O0)
+else()
+    target_compile_options(LabExample PRIVATE -O3 -flto)
+endif()
