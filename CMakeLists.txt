@@ -6,9 +6,9 @@ if(${CMAKE_VERSION} VERSION_LESS 3.12)
 
 endif()
 
-project(Labyrinth VERSION 0.1.0
-                  DESCRIPTION "A Labyrinth project"
-                  LANGUAGES C)
+project(Labyri VERSION 0.1.0
+               DESCRIPTION "A Labyri project"
+               LANGUAGES C)
 
 include_directories(
     ${PROJECT_SOURCE_DIR}/src
