@@ -1,0 +1,14 @@
+
+include_rules
+
+ifeq (@(BUILD),Debug)
+
+: foreach $(SRC_DIR)/*.c |> $(CC) $(BUILD_FLAGS) $(DEFINES) $(INCLUDES) -c %f -o %o |> $(OBJ_DIR)/%B.o | $(OBJ_DIR)/%B.gcno
+
+else
+
+: foreach $(SRC_DIR)/*.c |> $(CC) $(BUILD_FLAGS) $(DEFINES) $(INCLUDES) -c %f -o %o |> $(OBJ_DIR)/%B.o
+
+endif
+
+: $(OBJ_DIR)/*.o |> ar rcs %o %f |> $(BIN_DIR)/$(TARGET)

@@ -1,3 +1,4 @@
 build/
-examples/build
+examples/build/
 .vscode/
+.tup/

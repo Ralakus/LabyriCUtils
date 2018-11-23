@@ -1,0 +1,33 @@
+TARGET += liblabcutils.a
+
+CC            += gcc
+C_FLAGS       += -m64
+DEBUG_FLAGS   += $(C_FLAGS) -Wall -fprofile-arcs -ftest-coverage -fPIC -O0
+RELEASE_FLAGS += $(C_FLAGS) -O3 -flto
+BUILD_FLAGS   += 
+
+DEFINES  +=
+INCLUDES += -Isrc
+LIBS     += 
+
+
+SRC_DIR   += src/lab
+BUILD_DIR += build
+OBJ_DIR   += $(BUILD_DIR)/obj
+BIN_DIR   += $(BUILD_DIR)/bin
+
+ifeq (@(BUILD),Debug)
+
+    BUILD_FLAGS += $(DEBUG_FLAGS)
+
+else
+
+    BUILD_FLAGS += $(RELEASE_FLAGS)
+
+endif
+
+ifeq (@(BIT),64)
+    DEFINES += -DLAB_64_BIT
+else
+    DEFINES += -DLAB_32_BIT
+endif
