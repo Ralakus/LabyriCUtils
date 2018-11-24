@@ -94,6 +94,11 @@ bool lab_mempool_suballoc_free(lab_mempool_t* pool, lab_mempool_suballoc_t* allo
         lab_errorln("Passed in NULL value for alloc for function \"lab_mempool_suballoc_free\"");
         return false;
     }
-    return  lab_vec_remove_arr(&pool->data, (size_t)alloc->data - (size_t)lab_vec_at(&pool->data, 0), alloc->bytes) &&
-            lab_vec_remove(&pool->sub_allocs, alloc->index);
+
+    for(size_t i = alloc->index + 1; i < lab_vec_size(&pool->sub_allocs); i++) {
+        ((lab_mempool_suballoc_t*)lab_vec_at(&pool->sub_allocs, i))->data  -= (size_t)alloc->data;
+        ((lab_mempool_suballoc_t*)lab_vec_at(&pool->sub_allocs, i))->index -= 1;
+    }
+    return lab_vec_remove_arr(&pool->data, (size_t)alloc->data - (size_t)lab_vec_at(&pool->data, 0), alloc->bytes) &&
+           lab_vec_remove(&pool->sub_allocs, alloc->index);;
 }
