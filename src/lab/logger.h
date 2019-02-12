@@ -55,6 +55,9 @@ extern void lab_successln(const char* fmt, ...);
 extern void lab_print_raw    (const char* fmt, ...);
 extern void lab_println_raw  (const char* fmt, ...);
 
+extern void lab_error_raw   (const char* fmt, ...);
+extern void lab_errorln_raw (const char* fmt, ...);
+
 #ifdef __cplusplus
 }
 #endif
