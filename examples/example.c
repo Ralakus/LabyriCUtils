@@ -1,6 +1,7 @@
 #include <lab/logger.h>
 #include <lab/vector.h>
 #include <lab/mempool.h>
+#include <lab/string.h>
 
 int main() {
 
@@ -25,6 +26,17 @@ int main() {
     lab_successln("%s", (char*)hello_str.raw_data);
 
     lab_vec_free(&hello_str);
+
+    lab_str_t str;
+    lab_str_make(&str, "Hello");
+    lab_str_append_cstr(&str, " world!");
+    lab_str_insert_cstr(&str, " beautiful", 5);
+
+    const char* cstr = lab_str_cstr(&str);
+
+    lab_successln("%s", cstr);
+
+    lab_str_free(&str);
 
     return 0;
 }

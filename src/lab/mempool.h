@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "vector.h"
 
 typedef struct lab_mempool_suballoc_t {
@@ -29,3 +33,7 @@ extern void lab_mempool_free(lab_mempool_t* pool);
 extern lab_mempool_suballoc_t* lab_mempool_suballoc_alloc(lab_mempool_t* pool, size_t bytes);
 //extern lab_mempool_suballoc_t* lab_mempool_suballoc_realloc(lab_mempool_t* pool, lab_mempool_suballoc_t* alloc, size_t bytes);
 extern bool                    lab_mempool_suballoc_free(lab_mempool_t* pool, lab_mempool_suballoc_t* alloc);
+
+#ifdef __cplusplus
+}
+#endif

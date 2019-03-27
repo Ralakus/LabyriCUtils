@@ -22,7 +22,8 @@ add_library(LabCUtils STATIC ${all_c_src})
 set_property(TARGET LabCUtils PROPERTY C_STANDARD 11)
 
 set(CMAKE_C_FLAGS_RELEASE "-O3 -flto")
-set(CMAKE_C_FLAGS_DEBUG "-fprofile-arcs -ftest-coverage -fPIC -O0")
+set(CMAKE_C_FLAGS_DEBUG "-O0 -g")
+# set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g")
 
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)     # 64 bit
 

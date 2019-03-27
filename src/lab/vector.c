@@ -84,7 +84,11 @@ bool lab_vec_resize(lab_vec_t* vec, size_t new_size) {
     }
 }
 
-void* lab_vec_push_back_arr(lab_vec_t* vec, void* raw_data, size_t count) {
+bool lab_vec_shrink_to_size(lab_vec_t* vec) {
+    return lab_vec_resize(vec, vec->used_size);
+}
+
+void* lab_vec_push_back_arr(lab_vec_t* vec, const void* raw_data, size_t count) {
     vec->used_size += count;
     if(vec->used_size > vec->alloc_size) {
         if(!lab_vec_resize(vec, vec->alloc_size + (vec->used_size - vec->alloc_size))) {
@@ -101,18 +105,18 @@ void* lab_vec_push_back_arr(lab_vec_t* vec, void* raw_data, size_t count) {
     return lab_vec_at(vec, vec->used_size - count);
 }
 
-void* lab_vec_push_back(lab_vec_t* vec, void* raw_data) {
+void* lab_vec_push_back(lab_vec_t* vec, const void* raw_data) {
     return lab_vec_push_back_arr(vec, raw_data, 1);
 }
 
-bool lab_vec_pop_back_arr(lab_vec_t* vec, size_t count) {
-    return lab_vec_resize(vec, vec->used_size - count);
+void lab_vec_pop_back_arr(lab_vec_t* vec, size_t count) {
+    vec->used_size -= count;
 }
-bool lab_vec_pop_back    (lab_vec_t* vec) {
+void lab_vec_pop_back    (lab_vec_t* vec) {
     return lab_vec_pop_back_arr(vec, 1);
 }
 
-void* lab_vec_insert(lab_vec_t* vec, size_t index, void* raw_data, size_t count) {
+void* lab_vec_insert(lab_vec_t* vec, size_t index, const void* raw_data, size_t count) {
     vec->used_size += count;
     if(vec->used_size > vec->alloc_size) {
         if(!lab_vec_resize(vec, vec->used_size)) {
@@ -124,6 +128,15 @@ void* lab_vec_insert(lab_vec_t* vec, size_t index, void* raw_data, size_t count)
         memcpy(vec->raw_data + index, raw_data, vec->type_size * count);
     }
     return lab_vec_at(vec, index);
+}
+
+void* lab_vec_insert_vec(lab_vec_t* dest, size_t index, lab_vec_t* src) {
+    if(dest->type_size != src->type_size) {
+        lab_errorln("\'lab_vec_insert_vec\' dest vector and src vector have different type sizes!");
+        return NULL;
+    } else {
+        return lab_vec_insert(dest, index, src->raw_data, src->used_size);
+    }
 }
 
 
@@ -140,6 +153,25 @@ bool lab_vec_remove    (lab_vec_t* vec, size_t index) {
     return lab_vec_remove_arr(vec, index, 1);
 }
 
+
+bool lab_vec_copy(lab_vec_t* dest, lab_vec_t* src) {
+
+    lab_vec_free(dest);
+
+    return lab_vec_init         (dest, src->type_size, src->alloc_size) &&
+           lab_vec_push_back_arr(dest, src->raw_data, src->used_size) != NULL;
+
+}
+
+bool lab_vec_equal(lab_vec_t* vec0, lab_vec_t* vec1) {
+    if(vec0->type_size != vec1->type_size) return false;
+    if(vec0->used_size != vec1->used_size) return false;
+    if(memcmp(vec0->raw_data, vec1->raw_data, vec0->type_size * vec0->used_size)==0) {
+        return true;
+    } else {
+        return false;
+    }
+}
 
 #ifdef __cplusplus
 }

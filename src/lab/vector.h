@@ -17,10 +17,10 @@ extern "C" {
 */
 typedef struct lab_vec_t {
     
-    size_t type_size;
-    size_t alloc_size;
-    size_t used_size;
-    void* raw_data;
+    size_t type_size;  // Size of the type that is being stored
+    size_t alloc_size; // Not raw byte count, bytecount / type_size
+    size_t used_size;  // ^ but used
+    void* raw_data;    // Raw pointer to data
 
 } lab_vec_t;
 
@@ -50,11 +50,16 @@ extern size_t lab_vec_type_size (lab_vec_t* vec);
     Indices are determined by type_size
 */
 extern void* lab_vec_at          (lab_vec_t* vec, size_t index);
+
+#define LAB_VEC_TYPE_AT(vec, index, type) (*(type*)lab_vec_at(vec, index))
+
 /*
     Returns pointer to index in vector's allocated space
     Can be outside user's data
 */
 extern void* lab_vec_at_raw_alloc(lab_vec_t* vec, size_t index);
+
+#define LAB_VEC_TYPE_AT_RAW_ALLOC(vec, index, type) (*(type*)lab_vec_at_raw_alloc(vec, index))
 
 /*
     Returns false if resize failed
@@ -62,26 +67,31 @@ extern void* lab_vec_at_raw_alloc(lab_vec_t* vec, size_t index);
 extern bool lab_vec_resize(lab_vec_t* vec, size_t new_size);
 
 /*
+    Shrinks vector to used_size
+*/
+extern bool lab_vec_shrink_to_size(lab_vec_t* vec);
+
+/*
     Appends data to end of vector
     Returns pointer to data appended
     If NULL is passed as raw_data, no data will be copied into vector
 */
-extern void* lab_vec_push_back_arr(lab_vec_t* vec, void* raw_data, size_t count);
-extern void* lab_vec_push_back    (lab_vec_t* vec, void* raw_data);
+extern void* lab_vec_push_back_arr(lab_vec_t* vec, const void* raw_data, size_t count);
+extern void* lab_vec_push_back    (lab_vec_t* vec, const void* raw_data);
 
 /*
     Removes data from end of vector
-    Returns if removal was successful
 */
-extern bool lab_vec_pop_back_arr(lab_vec_t* vec, size_t count);
-extern bool lab_vec_pop_back    (lab_vec_t* vec);
+extern void lab_vec_pop_back_arr(lab_vec_t* vec, size_t count);
+extern void lab_vec_pop_back    (lab_vec_t* vec);
 
 /*
     Inserts data at specified index
     Returns pointer to new data
     If NULL is passed as raw_data, no data will be copied into vector
 */
-extern void* lab_vec_insert(lab_vec_t* vec, size_t index, void* raw_data, size_t count);
+extern void* lab_vec_insert    (lab_vec_t* vec,  size_t index, const void* raw_data, size_t count);
+extern void* lab_vec_insert_vec(lab_vec_t* dest, size_t index, lab_vec_t* src);
 
 
 /*
@@ -91,7 +101,16 @@ extern void* lab_vec_insert(lab_vec_t* vec, size_t index, void* raw_data, size_t
 extern bool lab_vec_remove_arr(lab_vec_t* vec, size_t start_index, size_t count);
 extern bool lab_vec_remove    (lab_vec_t* vec, size_t index);
 
+/*
+    Copies a vector into another vector
+    Frres vector that is being copied into
+*/
+extern bool lab_vec_copy(lab_vec_t* dest, lab_vec_t* src);
 
+/*
+    Compares two vectors
+*/
+extern bool lab_vec_equal(lab_vec_t* vec0, lab_vec_t* vec1);
 
 #ifdef __cplusplus
 }

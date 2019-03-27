@@ -1,3 +1,8 @@
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "mempool.h"
 
 bool lab_mempool_init(lab_mempool_t* pool, size_t bytes, size_t sub_alloc_count) {
@@ -102,3 +107,7 @@ bool lab_mempool_suballoc_free(lab_mempool_t* pool, lab_mempool_suballoc_t* allo
     return lab_vec_remove_arr(&pool->data, (size_t)alloc->data - (size_t)lab_vec_at(&pool->data, 0), alloc->bytes) &&
            lab_vec_remove(&pool->sub_allocs, alloc->index);;
 }
+
+#ifdef __cplusplus
+}
+#endif
