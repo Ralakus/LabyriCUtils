@@ -7,13 +7,15 @@ variables:
 
 build-lib:
     stage: build
-    image: ubuntu:latest
+    image: fedora:latest
     before_script:
     - apt update
-    - apt install software-properties-common -y
-    - apt-add-repository ppa:anatol/tup lucid main -y
-    - apt update
-    - apt install gcc tup -y
+    - apt install gcc git -y
+    - git clone git://github.com/gittup/tup.git
+    - cd tup
+    - ./bootstrap.sh
+    - cd ..
+    - ./tup/tup
     script:
     - tup
     artifacts:
