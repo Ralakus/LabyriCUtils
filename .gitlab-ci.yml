@@ -9,6 +9,7 @@ build-lib:
     stage: build
     image: ubuntu:latest
     before_script:
+    - apt install software-properties-common
     - apt-add-repository 'deb http://ppa.launchpad.net/anatol/tup/ubuntu precise main'
     - apt update
     - apt install gcc tup -y
