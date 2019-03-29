@@ -9,6 +9,7 @@ build-lib:
     stage: build
     image: ubuntu:latest
     before_script:
+    - apt update
     - apt install software-properties-common python-software-properties
     - apt-add-repository 'deb http://ppa.launchpad.net/anatol/tup/ubuntu precise main'
     - apt update
