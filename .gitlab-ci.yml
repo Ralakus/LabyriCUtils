@@ -8,9 +8,14 @@ variables:
 build-lib:
     stage: build
     image: ubuntu:latest
-    before_script: 
-    - echo "What the actual hell, why isn't tup in the repositories"
-    - apt update 
+    before_script:
+    - apt update
+    - apt install software-properties-common -y
+    - add-apt-repository main 
+    - add-apt-repository universe
+    - add-apt-repository restricted
+    - add-apt-repository multiverse
+    - apt update
     - apt install gcc tup -y
     script:
     - tup
