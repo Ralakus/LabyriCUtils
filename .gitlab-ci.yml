@@ -13,7 +13,7 @@ build-lib:
     - apt install gcc git -y
     - git clone git://github.com/gittup/tup.git
     - cd tup
-    - ./bootstrap.sh
+    - ./build.sh
     - cd ..
     - ./tup/tup
     script:
