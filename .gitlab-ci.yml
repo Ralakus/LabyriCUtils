@@ -7,7 +7,7 @@ variables:
 
 build-lib:
     stage: build
-    image: fedora:latest
+    image: ubuntu:latest
     before_script:
     - apt update
     - apt install gcc git -y
