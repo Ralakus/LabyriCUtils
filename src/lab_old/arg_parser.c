@@ -7,8 +7,6 @@ extern "C" {
 
 #include "math.h"
 
-#include "logger.h"
-
 #include <string.h>
 
 void lab_arg_init(lab_arg_t* arg, const char* short_name, const char* long_name, const char* description,  bool expect_preceeding) {
@@ -51,9 +49,9 @@ bool lab_arg_parser_parse  (lab_arg_parser_t* parser, int argc, const char** arg
 
             if(argv[i][1] == '-')  {
 
-                for(size_t j = 0; j < lab_vec_len(&parser->args); j++) {
+                for(size_t j = 0; j < lab_vec_size(&parser->args); j++) {
 
-                    lab_arg_t* cur_arg = LAB_VEC_TYPE_AT(&parser->args, j, lab_arg_t*);
+                    lab_arg_t* cur_arg = *(lab_arg_t**)lab_vec_at(&parser->args, j);
 
                     if(strcmp(cur_arg->long_name, &argv[i][2])==0) {
                         cur_arg->found = true;
@@ -68,9 +66,9 @@ bool lab_arg_parser_parse  (lab_arg_parser_t* parser, int argc, const char** arg
 
                 size_t arg_len = strlen(argv[i]);
                 
-                for(size_t j = 0; j < lab_vec_len(&parser->args); j++) {
+                for(size_t j = 0; j < lab_vec_size(&parser->args); j++) {
 
-                    lab_arg_t* cur_arg = LAB_VEC_TYPE_AT(&parser->args, j, lab_arg_t*);
+                    lab_arg_t* cur_arg = *(lab_arg_t**)lab_vec_at(&parser->args, j);
 
                     for(size_t k = 1; k < arg_len; k++) {
 
@@ -116,10 +114,10 @@ bool lab_arg_parser_parse  (lab_arg_parser_t* parser, int argc, const char** arg
 
     }
 
-    for(size_t i = 0; i < lab_vec_len(&parser->args); i++) {
-        lab_arg_t* cur_arg = LAB_VEC_TYPE_AT(&parser->args, i, lab_arg_t*);
+    for(size_t i = 0; i < lab_vec_size(&parser->args); i++) {
+        lab_arg_t* cur_arg = *(lab_arg_t**)lab_vec_at(&parser->args, i);
 
-        if(cur_arg->expect_preceeding && lab_vec_len(&cur_arg->preceeding_args) < 1 && cur_arg->found) {
+        if(cur_arg->expect_preceeding && lab_vec_size(&cur_arg->preceeding_args) < 1 && cur_arg->found) {
             lab_errorln("Argument '%s' ( '%s' ) expects preceeding arguments!", cur_arg->long_name, cur_arg->short_name);
             return false;
         }
