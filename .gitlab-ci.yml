@@ -11,7 +11,7 @@ build-lib:
     before_script:
     - apt update
     - apt install software-properties-common -y
-    - apt-add-repository 'deb http://ppa.launchpad.net/anatol/tup/ubuntu precise main' -y
+    - apt-add-repository ppa:anatol/tup lucid main -y
     - apt update
     - apt install gcc tup -y
     script:
