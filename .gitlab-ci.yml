@@ -7,7 +7,7 @@ variables:
 
 build-lib:
     stage: build
-    image: ubuntu
+    image: ubuntu:latest
     before_script:
     - apt update
     - apt install gcc tup -y
@@ -22,7 +22,7 @@ build-lib:
 
 run-example:
     stage: run-example
-    image: ubuntu
+    image: ubuntu:latest
     before_script:
     - apt update
     - apt install python3-pip -y
