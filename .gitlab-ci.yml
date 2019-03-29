@@ -11,11 +11,9 @@ build-lib:
     before_script:
     - apt update
     - apt install software-properties-common -y
-    - add-apt-repository main 
     - add-apt-repository universe
-    - add-apt-repository restricted
-    - add-apt-repository multiverse
     - apt update
+    - echo "What the hell, tup is in Ubuntu's repositories but it's sayings it's not when using the docker image"
     - apt install gcc tup -y
     script:
     - tup
