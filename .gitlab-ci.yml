@@ -10,8 +10,8 @@ build-lib:
     image: ubuntu:latest
     before_script:
     - apt update
-    - apt install software-properties-common python-software-properties
-    - apt-add-repository 'deb http://ppa.launchpad.net/anatol/tup/ubuntu precise main'
+    - apt install software-properties-common -y
+    - apt-add-repository 'deb http://ppa.launchpad.net/anatol/tup/ubuntu precise main' -y
     - apt update
     - apt install gcc tup -y
     script:
