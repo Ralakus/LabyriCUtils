@@ -8,14 +8,10 @@ variables:
 build-lib:
     stage: build
     image: ubuntu:latest
-    before_script:
-    - apt update
-    - apt install gcc git -y
-    - git clone git://github.com/gittup/tup.git
-    - cd tup
-    - ./build.sh
-    - cd ..
-    - ./tup/tup
+    before_script: 
+    - echo "What the actual hell, why isn't tup in the repositories"
+    - apt update 
+    - apt install gcc tup -y
     script:
     - tup
     artifacts:
