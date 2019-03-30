@@ -10,16 +10,12 @@ build-lib:
     image: ubuntu:devel
     before_script:
     - apt update
-    - apt install software-properties-common -y
-    - add-apt-repository universe
-    - apt update
-    - echo "What the hell, tup is in Ubuntu's repositories but it's sayings it's not when using the docker image"
     - apt install gcc tup -y
     script:
     - tup
     artifacts:
         paths:
-        - build/bin/libLabCUtils.a
+        - build/bin/liblabcutils.a
         - build/obj/*.o
         - example/build/obj/example.o
         - example/build/bin/example
@@ -33,6 +29,6 @@ run-example:
     - pip3 --version
     - pip3 install gcovr
     script:
-    - cd examples/build/bin
+    - cd example/build/bin/
     - ./example
     - gcovr
