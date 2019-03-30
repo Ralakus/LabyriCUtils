@@ -34,8 +34,8 @@ defines = {
     "LAB_64_BIT"
 }
 
-compiler = "gcc"
-linker   = "gcc"
+compiler = "clang"
+linker   = "clang"
 
 compile_args = " -std=c11 -m64 "
 link_args    = " -std=c11 -m64 "

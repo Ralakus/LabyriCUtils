@@ -34,4 +34,5 @@ run-example:
     - cd example/build/bin/
     - ./example
     - ./example -h
+    - cd ../../../
     - gcovr
