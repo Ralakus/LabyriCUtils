@@ -12,13 +12,19 @@ int main(int argc, char* argv[]) {
     lab_arg_init(&arg_help, "h", "help", "Displays help message", false);
     lab_arg_parser_add_arg(&arg_parser, &arg_help);
 
+    lab_arg_t arg_test;
+    lab_arg_init(&arg_test, "t", "test", "Test", false);
+    lab_arg_parser_add_arg(&arg_parser, &arg_test);
+
     lab_arg_parser_parse(&arg_parser, argc, (const char**)argv);
 
     lab_arg_parser_free(&arg_parser);
 
     if(arg_help.found) lab_successln("Help message, I know, very helpful");
+    if(arg_test.found) lab_successln("Test message");
 
     lab_arg_free(&arg_help);
+    lab_arg_free(&arg_test);
 
     lab_vec_t vec;
     lab_vec_init(&vec, 1, 8);

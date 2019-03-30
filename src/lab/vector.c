@@ -2,6 +2,10 @@
 
 #include "memory.h"
 
+#define USED_BYTES (vec->used_len * vec->type_size)
+#define ALLOC_BYTES (vec->alloc_len * vec->type_size)
+#define LEN_TO_BYTES(len) (len * vec->type_size) 
+
 size_t lab_vec_grow_fn_double(size_t old_size) {
     return old_size * 2;
 }
@@ -16,7 +20,7 @@ bool lab_vec_init(lab_vec_t* vec, size_t type_size, size_t init_len) {
     vec->used_len  = 0;
     vec->alloc_len = init_len;
     vec->grow_fn = lab_vec_grow_fn_1p5;
-    vec->data  = lab_mem_realloc(NULL, vec->alloc_len);
+    vec->data  = lab_mem_realloc(NULL, ALLOC_BYTES);
     return init_len > 0 ? vec->data != NULL : true;
 
 }
@@ -60,7 +64,7 @@ void lab_vec_set_grow_fn(lab_vec_t* vec, lab_vec_grow_fn_t fn) {
 
 bool lab_vec_resize(lab_vec_t* vec, size_t new_len) {
     vec->alloc_len = new_len;
-    vec->data = lab_mem_realloc(vec->data, vec->alloc_len);
+    vec->data = lab_mem_realloc(vec->data, ALLOC_BYTES);
     if(vec->data == NULL && vec->alloc_len != 0) {
         return false;
     } else {
@@ -86,7 +90,7 @@ void* lab_vec_push_back_arr(lab_vec_t* vec, const void* data, size_t count) {
             }
         }
 
-        if(lab_mem_copy(vec->data + vec->used_len * vec->type_size - count * vec->type_size, data, count * vec->type_size) == NULL) return NULL;
+        if(lab_mem_copy(vec->data + USED_BYTES - LEN_TO_BYTES(count), data, LEN_TO_BYTES(count)) == NULL) return NULL;
         else return vec->data + vec->used_len - count;
     } else return vec->data;
 }
@@ -112,8 +116,8 @@ void* lab_vec_insert    (lab_vec_t* vec,  size_t index, const void* data, size_t
                 if(!lab_vec_resize(vec, vec->used_len)) return NULL;
             }
         }
-        if(lab_mem_shift_right(vec->data + (vec->type_size * index), vec->used_len * vec->type_size - (vec->type_size * index) - 1, count * vec->type_size) == NULL) return NULL;
-        if(lab_mem_copy(vec->data + index, data, count)) return NULL;
+        if(lab_mem_shift_right(vec->data + LEN_TO_BYTES(index), USED_BYTES - LEN_TO_BYTES(index) - 1, LEN_TO_BYTES(count)) == NULL) return NULL;
+        if(lab_mem_copy(vec->data + LEN_TO_BYTES(index), data, LEN_TO_BYTES(count))) return NULL;
         else return vec->data + index;
     } else return vec->data;
 }
@@ -124,7 +128,7 @@ void* lab_vec_insert_vec(lab_vec_t* dest, size_t index, const lab_vec_t* src) {
 
 bool lab_vec_remove_arr(lab_vec_t* vec, size_t start_index, size_t count) {
     vec->used_len -= count;
-    if(lab_mem_shift_left(vec->data + (vec->type_size * start_index) + (vec->type_size * count), vec->used_len * vec->type_size - (vec->type_size * start_index), count * vec->type_size) == NULL) return false;
+    if(lab_mem_shift_left(vec->data + LEN_TO_BYTES(start_index) + LEN_TO_BYTES(count), USED_BYTES - LEN_TO_BYTES(start_index), LEN_TO_BYTES(count)) == NULL) return false;
     else return true;
 }
 
