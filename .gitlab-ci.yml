@@ -17,7 +17,9 @@ build-lib:
         paths:
         - build/bin/liblabcutils.a
         - build/obj/*.o
+        - build/obj/*.gcno
         - example/build/obj/example.o
+        - example/build/obj/example.gcno
         - example/build/bin/example
 
 run-example:
@@ -31,4 +33,5 @@ run-example:
     script:
     - cd example/build/bin/
     - ./example
+    - ./example -h
     - gcovr
