@@ -7,10 +7,10 @@
 #define LEN_TO_BYTES(len) (len * vec->type_size) 
 
 size_t lab_vec_grow_fn_double(size_t old_size) {
-    return old_size * 2;
+    return old_size == 0 ? 8 : old_size * 2;
 }
 size_t lab_vec_grow_fn_1p5   (size_t old_size) {
-    return old_size + (1 + ((old_size - 1) / 2));
+    return old_size == 0 ? 8 : old_size + (1 + ((old_size - 1) / 2));
 }
 
 
@@ -46,12 +46,12 @@ size_t lab_vec_type_size (lab_vec_t* vec) {
 
 void* lab_vec_at          (lab_vec_t* vec, size_t index) {
     if(index >= vec->used_len) return NULL;
-    else return vec->data + (vec->type_size * index);
+    else return vec->data + LEN_TO_BYTES(index);
 }
 
 void* lab_vec_at_alloc(lab_vec_t* vec, size_t index) {
     if(index >= vec->alloc_len) return NULL;
-    else return vec->data + (vec->type_size * index);
+    else return vec->data + LEN_TO_BYTES(index);
 }
 
 bool lab_vec_grow(lab_vec_t* vec) {
