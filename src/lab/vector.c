@@ -86,7 +86,7 @@ void* lab_vec_push_back_arr(lab_vec_t* vec, const void* data, size_t count) {
             }
         }
 
-        if(lab_mem_copy(vec->data + vec->used_len - count, data, count * vec->type_size) == NULL) return NULL;
+        if(lab_mem_copy(vec->data + vec->used_len * vec->type_size - count * vec->type_size, data, count * vec->type_size) == NULL) return NULL;
         else return vec->data + vec->used_len - count;
     } else return vec->data;
 }
@@ -112,7 +112,7 @@ void* lab_vec_insert    (lab_vec_t* vec,  size_t index, const void* data, size_t
                 if(!lab_vec_resize(vec, vec->used_len)) return NULL;
             }
         }
-        if(lab_mem_shift_right(vec->data + (vec->type_size * index), vec->used_len - (vec->type_size * index) - 1, count * vec->type_size) == NULL) return NULL;
+        if(lab_mem_shift_right(vec->data + (vec->type_size * index), vec->used_len * vec->type_size - (vec->type_size * index) - 1, count * vec->type_size) == NULL) return NULL;
         if(lab_mem_copy(vec->data + index, data, count)) return NULL;
         else return vec->data + index;
     } else return vec->data;
@@ -124,7 +124,7 @@ void* lab_vec_insert_vec(lab_vec_t* dest, size_t index, const lab_vec_t* src) {
 
 bool lab_vec_remove_arr(lab_vec_t* vec, size_t start_index, size_t count) {
     vec->used_len -= count;
-    if(lab_mem_shift_left(vec->data + (vec->type_size * start_index) + (vec->type_size * count), vec->used_len - (vec->type_size * start_index), count * vec->type_size) == NULL) return false;
+    if(lab_mem_shift_left(vec->data + (vec->type_size * start_index) + (vec->type_size * count), vec->used_len * vec->type_size - (vec->type_size * start_index), count * vec->type_size) == NULL) return false;
     else return true;
 }
 
