@@ -49,8 +49,8 @@ if build_mode == release then
 
 elseif build_mode == debug then
 
-    compile_args = compile_args .. " -O0 -g -Wall "
-    link_args    = link_args    .. " -O0 -g -Wall "
+    compile_args = compile_args .. " -O0 -g -Wall -fprofile-arcs -ftest-coverage"
+    link_args    = link_args    .. " -O0 -g -Wall -fprofile-arcs -ftest-coverage"
 
     defines[#defines + 1] = "LAB_BUILD_DEBUG"
 
@@ -88,36 +88,60 @@ for i = 1, #link_libraries do
     link_link_libs_str = link_link_libs_str .. " -l".. link_libraries[i] 
 end
 
-build_command = compiler .. " -c " .. compile_args.. build_include_dir_str .. build_defines_str .. " -o %o %f"
+build_command = compiler .. " -c " .. compile_args.. build_include_dir_str .. build_defines_str .. " -o " .. obj_dir .. "%B.o %f"
 link_command  = linker   .. link_args .. link_link_paths_str   .. link_link_libs_str .. " -o %o %f"
 
-objects = tup.foreach_rule(
-    src,
-    build_command,
-    { obj_dir .. "%B.o" }
-)
+
+if build_mode == debug then 
+    objects = tup.foreach_rule(
+        src,
+        build_command,
+        { obj_dir .. "%B.o", obj_dir .. "%B.gcno"}
+    )
+else 
+    objects = tup.foreach_rule(
+        src,
+        build_command,
+        { obj_dir .. "%B.o" }
+    )
+end
 
 if build_type == executable then
 
-    tup.rule(objects, link_command, { bin_dir .. output })
+    tup.rule(obj_dir .. "*.o", link_command, { bin_dir .. output })
 
 elseif build_type == static_library then
 
-    tup.rule(objects, "ar rcs  %o %f", { bin_dir .. "lib" .. output .. ".a" })
+    tup.rule(obj_dir .. "*.o", "ar rcs  %o %f", { bin_dir .. "lib" .. output .. ".a" })
 
 end
 
 
 -- Example
 
-tup.rule(
-    { "example/example.c" },
-    compiler .. " -o %o -c %f -Isrc",
-    { "example/build/obj/%B.o" }
-)
 
-tup.rule(
-    { "example/build/obj/example.o", bin_dir .. "lib" .. output .. ".a" },
-    linker .. " -o %o example/build/obj/example.o -Lbuild/bin -llabcutils",
-    { "example/build/bin/example" }
-)
+if build_mode == debug then 
+    tup.rule(
+        { "example/example.c" },
+        compiler .. " -o example/build/obj/%B.o -c %f -Isrc -fprofile-arcs -ftest-coverage",
+        { "example/build/obj/%B.o", "example/build/obj/%B.gcno" }
+    )
+    
+    tup.rule(
+        { "example/build/obj/example.o", bin_dir .. "lib" .. output .. ".a" },
+        linker .. " -o %o example/build/obj/example.o -Lbuild/bin -llabcutils -fprofile-arcs -ftest-coverage",
+        { "example/build/bin/example" }
+    )
+else 
+    tup.rule(
+        { "example/example.c" },
+        compiler .. " -o %o -c %f -Isrc",
+        { "example/build/obj/%B.o" }
+    )
+    
+    tup.rule(
+        { "example/build/obj/example.o", bin_dir .. "lib" .. output .. ".a" },
+        linker .. " -o %o example/build/obj/example.o -Lbuild/bin -llabcutils",
+        { "example/build/bin/example" }
+    )
+end
