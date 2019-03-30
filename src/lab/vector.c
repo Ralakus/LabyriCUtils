@@ -1,178 +1,149 @@
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include "vector.h"
 
-#include <stdlib.h>
-#include <string.h>
+#include "memory.h"
 
-bool lab_vec_init(lab_vec_t* vec, size_t type_size, size_t init_size) {
-    vec->type_size  = type_size;
-    vec->used_size  = 0;
-    vec->alloc_size = init_size;
-    if(init_size == 0) {
+size_t lab_vec_grow_fn_double(size_t old_size) {
+    return old_size * 2;
+}
+size_t lab_vec_grow_fn_1p5   (size_t old_size) {
+    return old_size + (1 + ((old_size - 1) / 2));
+}
 
-        vec->raw_data = NULL;
 
-        return true;
+bool lab_vec_init(lab_vec_t* vec, size_t type_size, size_t init_len) {
 
-    } else {
+    vec->type_size = type_size;
+    vec->used_len  = 0;
+    vec->alloc_len = init_len;
+    vec->grow_fn = lab_vec_grow_fn_1p5;
+    vec->data  = lab_mem_realloc(NULL, vec->alloc_len);
+    return init_len > 0 ? vec->data != NULL : true;
 
-        vec->raw_data   = malloc(type_size * vec->alloc_size);
-        if(vec->raw_data == NULL) {
-            lab_errorln("Failed to allocate vector array with size of %d and type size of %d", vec->alloc_size, vec->type_size);
-            return false;
-        } else {
-            return true;
-        }
-
-    }
 }
 
 void lab_vec_free(lab_vec_t* vec) {
-    vec->used_size  = 0;
-    vec->alloc_size = 0;
-    free(vec->raw_data);
+    vec->type_size = 0;
+    vec->used_len  = 0;
+    vec->alloc_len = 0;
+    lab_mem_free(vec->data);
 }
 
-size_t lab_vec_size(lab_vec_t* vec) {
-    return vec->used_size;
+size_t lab_vec_len       (lab_vec_t* vec) {
+    return vec->used_len;
 }
 
-size_t lab_vec_alloc_size(lab_vec_t* vec) {
-    return vec->alloc_size;
+size_t lab_vec_alloc_len (lab_vec_t* vec) {
+    return vec->alloc_len;
 }
 
-size_t lab_vec_type_size(lab_vec_t* vec) {
+size_t lab_vec_type_size (lab_vec_t* vec) {
     return vec->type_size;
 }
 
-void* lab_vec_at(lab_vec_t* vec, size_t index) {
-    if(index >= vec->used_size) {
-        lab_errorln("Tried to access data outside of vector of size %d but access index of %d", vec->used_size, index);
-        return NULL;
-    } else {
-        return vec->raw_data + (vec->type_size * index);
-    }
+void* lab_vec_at          (lab_vec_t* vec, size_t index) {
+    if(index >= vec->used_len) return NULL;
+    else return vec->data + (vec->type_size * index);
 }
 
-void* lab_vec_at_raw_alloc(lab_vec_t* vec, size_t index) {
-    if(index >= vec->alloc_size) {
-        lab_errorln("Tried to access data outside of vector of alloc size %d but access index of %d", vec->alloc_size, index);
-        return NULL;
-    } else {
-        return vec->raw_data + (vec->type_size * index);
-    }
+void* lab_vec_at_alloc(lab_vec_t* vec, size_t index) {
+    if(index >= vec->alloc_len) return NULL;
+    else return vec->data + (vec->type_size * index);
 }
 
-bool lab_vec_resize(lab_vec_t* vec, size_t new_size) {
-    if(new_size == 0) {
-        lab_vec_free(vec);
-        return true;
-    }
-    vec->alloc_size = new_size;
-    vec->raw_data = realloc(vec->raw_data, vec->alloc_size * vec->type_size);
-    if(vec->raw_data == NULL) {
-        lab_errorln("Failed to reallocate vector from size %d to %d with type size of %d", vec->alloc_size, vec->type_size * new_size, vec->type_size);
+bool lab_vec_grow(lab_vec_t* vec) {
+    return lab_vec_resize(vec, vec->grow_fn(vec->alloc_len));
+}
+
+void lab_vec_set_grow_fn(lab_vec_t* vec, lab_vec_grow_fn_t fn) {
+    vec->grow_fn = fn;
+}
+
+bool lab_vec_resize(lab_vec_t* vec, size_t new_len) {
+    vec->alloc_len = new_len;
+    vec->data = lab_mem_realloc(vec->data, vec->alloc_len);
+    if(vec->data == NULL && vec->alloc_len != 0) {
         return false;
     } else {
-        if(vec->used_size > vec->alloc_size) {
-            vec->used_size = vec->alloc_size;
+        if(vec->used_len > vec->alloc_len) {
+            vec->used_len = vec->alloc_len;
         }
         return true;
     }
 }
 
 bool lab_vec_shrink_to_size(lab_vec_t* vec) {
-    return lab_vec_resize(vec, vec->used_size);
+    return lab_vec_resize(vec, vec->used_len);
 }
 
-void* lab_vec_push_back_arr(lab_vec_t* vec, const void* raw_data, size_t count) {
-    vec->used_size += count;
-    if(vec->used_size > vec->alloc_size) {
-        if(!lab_vec_resize(vec, vec->alloc_size + (vec->used_size - vec->alloc_size))) {
-            lab_errorln("Failed to push back vector!");
-            return NULL;
+void* lab_vec_push_back_arr(lab_vec_t* vec, const void* data, size_t count) {
+    if(count > 0) {
+        vec->used_len += count;
+        if(vec->alloc_len < vec->used_len) {
+            if(vec->used_len < vec->grow_fn(vec->alloc_len)) {
+                if(!lab_vec_grow(vec)) return NULL;
+            } else {
+                if(!lab_vec_resize(vec, vec->used_len)) return NULL;
+            }
         }
-    }
-    if(raw_data!=NULL){
-        if(memcpy(lab_vec_at_raw_alloc(vec, vec->used_size - count), raw_data, vec->type_size * count)==NULL) {
-            lab_errorln("Failed to copy data into vector!");
-            return NULL;
-        }
-    }
-    return lab_vec_at(vec, vec->used_size - count);
+
+        if(lab_mem_copy(vec->data + vec->used_len - count, data, count * vec->type_size) == NULL) return NULL;
+        else return vec->data + vec->used_len - count;
+    } else return vec->data;
 }
 
-void* lab_vec_push_back(lab_vec_t* vec, const void* raw_data) {
-    return lab_vec_push_back_arr(vec, raw_data, 1);
+void* lab_vec_push_back    (lab_vec_t* vec, const void* data) {
+    return lab_vec_push_back_arr(vec, data, 1);
 }
 
 void lab_vec_pop_back_arr(lab_vec_t* vec, size_t count) {
-    vec->used_size -= count;
+    vec->used_len -= count;
 }
 void lab_vec_pop_back    (lab_vec_t* vec) {
-    return lab_vec_pop_back_arr(vec, 1);
+    --vec->used_len;
 }
 
-void* lab_vec_insert(lab_vec_t* vec, size_t index, const void* raw_data, size_t count) {
-    vec->used_size += count;
-    if(vec->used_size > vec->alloc_size) {
-        if(!lab_vec_resize(vec, vec->used_size)) {
-            return NULL;
+void* lab_vec_insert    (lab_vec_t* vec,  size_t index, const void* data, size_t count) {
+    if(count > 0) {
+        vec->used_len += count;
+        if(vec->alloc_len < vec->used_len) {
+            if(vec->used_len < vec->grow_fn(vec->alloc_len)) {
+                if(!lab_vec_grow(vec)) return NULL;
+            } else {
+                if(!lab_vec_resize(vec, vec->used_len)) return NULL;
+            }
         }
-    }
-    memmove(lab_vec_at_raw_alloc(vec, index + count), lab_vec_at_raw_alloc(vec, index), vec->used_size - index);
-    if(raw_data!=NULL) {
-        memcpy(vec->raw_data + index, raw_data, vec->type_size * count);
-    }
-    return lab_vec_at(vec, index);
+        if(lab_mem_shift_right(vec->data + (vec->type_size * index), vec->used_len - (vec->type_size * index) - 1, count * vec->type_size) == NULL) return NULL;
+        if(lab_mem_copy(vec->data + index, data, count)) return NULL;
+        else return vec->data + index;
+    } else return vec->data;
 }
 
-void* lab_vec_insert_vec(lab_vec_t* dest, size_t index, lab_vec_t* src) {
-    if(dest->type_size != src->type_size) {
-        lab_errorln("\'lab_vec_insert_vec\' dest vector and src vector have different type sizes!");
-        return NULL;
-    } else {
-        return lab_vec_insert(dest, index, src->raw_data, src->used_size);
-    }
+void* lab_vec_insert_vec(lab_vec_t* dest, size_t index, const lab_vec_t* src) {
+    return lab_vec_insert(dest, index, src->data, src->used_len);
 }
-
 
 bool lab_vec_remove_arr(lab_vec_t* vec, size_t start_index, size_t count) {
-
-    vec->used_size -= count;
-
-    memmove(lab_vec_at(vec, start_index), lab_vec_at(vec, start_index + count), vec->used_size - start_index);
-
-    return true;
+    vec->used_len -= count;
+    if(lab_mem_shift_left(vec->data + (vec->type_size * start_index) + (vec->type_size * count), vec->used_len - (vec->type_size * start_index), count * vec->type_size) == NULL) return false;
+    else return true;
 }
 
 bool lab_vec_remove    (lab_vec_t* vec, size_t index) {
     return lab_vec_remove_arr(vec, index, 1);
 }
 
-
 bool lab_vec_copy(lab_vec_t* dest, lab_vec_t* src) {
-
     lab_vec_free(dest);
-
-    return lab_vec_init         (dest, src->type_size, src->alloc_size) &&
-           lab_vec_push_back_arr(dest, src->raw_data, src->used_size) != NULL;
-
+    return lab_vec_init(dest, src->type_size, src->alloc_len) &&
+           lab_vec_push_back_arr(dest, src->data, src->used_len);
 }
 
 bool lab_vec_equal(lab_vec_t* vec0, lab_vec_t* vec1) {
     if(vec0->type_size != vec1->type_size) return false;
-    if(vec0->used_size != vec1->used_size) return false;
-    if(memcmp(vec0->raw_data, vec1->raw_data, vec0->type_size * vec0->used_size)==0) {
+    if(vec0->used_len != vec1->used_len) return false;
+    if(lab_mem_cmp(vec0->data, vec1->data, vec0->type_size * vec0->used_len) == 0) {
         return true;
     } else {
         return false;
     }
 }
-
-#ifdef __cplusplus
-}
-#endif
