@@ -102,8 +102,9 @@ bool lab_arg_parser_parse  (lab_arg_parser_t* parser, int argc, const char** arg
                 if(prev_arg->expect_preceeding) {
                     lab_vec_push_back(&prev_arg->preceeding_args, &argv[i]);
                 } else {
-                    lab_errorln("Argument '%s' ( '%s' ) does not expect preceeding arguments!", prev_arg->long_name, prev_arg->short_name);
-                    return false;
+                    /*lab_errorln("Argument '%s' ( '%s' ) does not expect preceeding arguments!", prev_arg->long_name, prev_arg->short_name);
+                    return false;*/
+                    lab_vec_push_back(&parser->extra_args, &argv[i]);
                 }
 
             } else {
