@@ -135,6 +135,17 @@ void lab_arg_parser_free   (lab_arg_parser_t* parser) {
     lab_vec_free(&parser->extra_args);
 }
 
+void lab_arg_parser_print_help(lab_arg_parser_t* parser, const char* program_description) {
+    lab_noticeln("%s", program_description);
+    for(size_t i = 0; i < lab_vec_len(&parser->args); i++) {
+        lab_noticeln("    \'-%s\', \'--%s\' %s",
+            LAB_VEC_TYPE_AT(&parser->args, i, lab_arg_t*)->short_name,
+            LAB_VEC_TYPE_AT(&parser->args, i, lab_arg_t*)->long_name,
+            LAB_VEC_TYPE_AT(&parser->args, i, lab_arg_t*)->description
+        );
+    }
+}
+
 #ifdef __cplusplus
 }
 #endif

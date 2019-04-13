@@ -18,10 +18,10 @@ int main(int argc, char* argv[]) {
 
     lab_arg_parser_parse(&arg_parser, argc, (const char**)argv);
 
-    lab_arg_parser_free(&arg_parser);
-
-    if(arg_help.found) lab_successln("Help message, I know, very helpful");
+    if(arg_help.found) lab_arg_parser_print_help(&arg_parser, "This is a Labyri C Utility example");
     if(arg_test.found) lab_successln("Test message");
+
+    lab_arg_parser_free(&arg_parser);
 
     lab_arg_free(&arg_help);
     lab_arg_free(&arg_test);

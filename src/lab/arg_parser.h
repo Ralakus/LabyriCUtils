@@ -34,6 +34,8 @@ void lab_arg_parser_add_arg(lab_arg_parser_t* parser, lab_arg_t* arg); // Does n
 bool lab_arg_parser_parse  (lab_arg_parser_t* parser, int argc, const char** argv);
 void lab_arg_parser_free   (lab_arg_parser_t* parser); 
 
+void lab_arg_parser_print_help(lab_arg_parser_t* parser, const char* program_description);
+
 #ifdef __cplusplus
 }
 #endif
