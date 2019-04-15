@@ -39,9 +39,9 @@ int main(int argc, char* argv[]) {
 
     lab_vec_t vec2;
     lab_vec_init(&vec2, 1, 8);
-    lab_vec_push_back_arr(&vec2, " beautiful", 10);
+    lab_vec_push_back_arr(&vec2, " beautiful", 11);
 
-    lab_vec_insert_vec(&vec, 5, &vec2);
+    lab_vec_insert_vec_len(&vec, 5, &vec2, lab_vec_len(&vec2) - 1);
 
     lab_vec_free(&vec2);
 

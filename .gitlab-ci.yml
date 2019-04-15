@@ -35,5 +35,9 @@ run-example:
     - ./example
     - ./example -h
     - ./example --help
+    - ./example -t
+    - ./example --test
+    - ./example -ht
+    - ./example --help --test
     - cd ../../../
     - gcovr

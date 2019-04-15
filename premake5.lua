@@ -37,10 +37,6 @@ workspace "Labyri"
         linkoptions  { "-flto" }
     filter { }
 
-    targetdir ("build/bin/")
-
-    objdir ("build/obj/")
-
 
 project "labcutils"
     kind "StaticLib"
@@ -65,3 +61,35 @@ project "labcutils"
         defines { "NDEBUG" }
 
     filter {}
+
+    
+project "example"
+    kind "ConsoleApp"
+
+    files { "example/example.c"}
+
+    includedirs { "src" }
+    links { "labcutils" }
+
+    if is_64_bit then
+        defines { "LAB_64_BIT" }
+    else 
+        defines { "LAB_32_BIT" }
+    end
+
+    filter "configurations:Debug"
+        defines { "DEBUG" }
+
+        if build_os == linux and coverage_test then 
+            buildoptions { "-fprofile-arcs", "-ftest-coverage" }
+            linkoptions  { "-fprofile-arcs", "-ftest-coverage" }
+        end
+
+    filter "configurations:Release"
+        defines { "NDEBUG" }
+
+    filter {}
+
+    targetdir ("example/build/bin/")
+
+    objdir ("example/build/obj/")

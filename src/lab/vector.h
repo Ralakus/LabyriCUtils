@@ -105,8 +105,9 @@ extern void lab_vec_pop_back    (lab_vec_t* vec);
     Returns pointer to new data;
     If NULL is passed as data, no data will be copied into vector
 */
-extern void* lab_vec_insert    (lab_vec_t* vec,  size_t index, const void* data, size_t count);
-extern void* lab_vec_insert_vec(lab_vec_t* dest, size_t index, const lab_vec_t* src);
+extern void* lab_vec_insert        (lab_vec_t* vec,  size_t index, const void* data, size_t count);
+extern void* lab_vec_insert_vec    (lab_vec_t* dest, size_t index, const lab_vec_t* src);
+extern void* lab_vec_insert_vec_len(lab_vec_t* dest, size_t index, const lab_vec_t* src, size_t len);
 
 
 /*

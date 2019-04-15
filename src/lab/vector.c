@@ -126,6 +126,10 @@ void* lab_vec_insert_vec(lab_vec_t* dest, size_t index, const lab_vec_t* src) {
     return lab_vec_insert(dest, index, src->data, src->used_len);
 }
 
+void* lab_vec_insert_vec_len(lab_vec_t* dest, size_t index, const lab_vec_t* src, size_t len) {
+    return lab_vec_insert(dest, index, src->data, len <= src->used_len ? len : src->used_len);
+}
+
 bool lab_vec_remove_arr(lab_vec_t* vec, size_t start_index, size_t count) {
     vec->used_len -= count;
     if(lab_mem_shift_left(vec->data + LEN_TO_BYTES(start_index) + LEN_TO_BYTES(count), USED_BYTES - LEN_TO_BYTES(start_index), LEN_TO_BYTES(count)) == NULL) return false;
